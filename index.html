@@ -1,0 +1,188 @@
+function drawCenter(){
+
+    const R = Math.min(W,H) * 0.105;
+
+    /* =========================
+       OUTER BLACK-HOLE GLOW
+    ========================= */
+
+    const outerGlow = ctx.createRadialGradient(
+        CX, CY, R * .4,
+        CX, CY, R * 3.2
+    );
+
+    outerGlow.addColorStop(0, "rgba(0,0,0,1)");
+    outerGlow.addColorStop(.35, "rgba(0,0,0,.95)");
+    outerGlow.addColorStop(.50, "rgba(255,0,55,.25)");
+    outerGlow.addColorStop(.68, "rgba(255,40,90,.08)");
+    outerGlow.addColorStop(1, "rgba(0,0,0,0)");
+
+    ctx.fillStyle = outerGlow;
+
+    ctx.beginPath();
+    ctx.arc(CX, CY, R * 3.2, 0, Math.PI * 2);
+    ctx.fill();
+
+
+    /* =========================
+       ROTATING ENERGY DISK
+    ========================= */
+
+    ctx.save();
+
+    ctx.translate(CX, CY);
+
+    ctx.rotate(t * .35);
+
+    for(let i = 0; i < 5; i++){
+
+        ctx.beginPath();
+
+        const radius = R * (1.35 + i * .12);
+
+        for(let a = 0; a <= Math.PI * 2; a += .035){
+
+            const wave =
+                Math.sin(a * 14 + t * 8 + i) *
+                (3 + i);
+
+            const x =
+                Math.cos(a) * (radius + wave);
+
+            const y =
+                Math.sin(a) *
+                (radius + wave) *
+                .30;
+
+            if(a === 0)
+                ctx.moveTo(x,y);
+            else
+                ctx.lineTo(x,y);
+        }
+
+        ctx.strokeStyle =
+            `rgba(255,${35+i*25},${80+i*30},${.16})`;
+
+        ctx.lineWidth = 2 + i * .5;
+
+        ctx.shadowBlur = 25;
+
+        ctx.shadowColor = "#ff1744";
+
+        ctx.stroke();
+    }
+
+    ctx.restore();
+
+
+    /* =========================
+       BRIGHT EVENT HORIZON
+    ========================= */
+
+    ctx.beginPath();
+
+    ctx.arc(
+        CX,
+        CY,
+        R * 1.15,
+        0,
+        Math.PI * 2
+    );
+
+    const ringGradient = ctx.createRadialGradient(
+        CX, CY, R * .95,
+        CX, CY, R * 1.25
+    );
+
+    ringGradient.addColorStop(
+        0,
+        "rgba(0,0,0,1)"
+    );
+
+    ringGradient.addColorStop(
+        .55,
+        "rgba(255,20,70,.65)"
+    );
+
+    ringGradient.addColorStop(
+        .72,
+        "rgba(255,100,150,.35)"
+    );
+
+    ringGradient.addColorStop(
+        1,
+        "rgba(255,0,50,0)"
+    );
+
+    ctx.fillStyle = ringGradient;
+
+    ctx.fill();
+
+
+    /* =========================
+       PURE BLACK CENTER
+    ========================= */
+
+    ctx.beginPath();
+
+    ctx.arc(
+        CX,
+        CY,
+        R,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fillStyle = "#000";
+
+    ctx.shadowBlur = 45;
+
+    ctx.shadowColor = "#ff1744";
+
+    ctx.fill();
+
+    ctx.shadowBlur = 0;
+
+
+    /* =========================
+       SMALL INNER GLOW
+    ========================= */
+
+    const inner = ctx.createRadialGradient(
+        CX - R*.25,
+        CY - R*.25,
+        1,
+        CX,
+        CY,
+        R
+    );
+
+    inner.addColorStop(
+        0,
+        "rgba(255,255,255,.025)"
+    );
+
+    inner.addColorStop(
+        .6,
+        "rgba(30,0,10,.15)"
+    );
+
+    inner.addColorStop(
+        1,
+        "rgba(0,0,0,1)"
+    );
+
+    ctx.fillStyle = inner;
+
+    ctx.beginPath();
+
+    ctx.arc(
+        CX,
+        CY,
+        R,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+}
